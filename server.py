@@ -1,9 +1,10 @@
 import firebase_admin
 from firebase_admin import db
 import json
+import env as env
 
-cred_obj = firebase_admin.credentials.Certificate('C:/Users/madra/OneDrive - Nanyang Technological University\McMasters/Software Arch/McMaster4SA3/mcmastersa-cb17c-firebase-adminsdk-xl82d-0427c135f3.json')
-databaseURL = "https://mcmastersa-cb17c-default-rtdb.firebaseio.com/"
+cred_obj = firebase_admin.credentials.Certificate(env.cert_url)
+databaseURL = env.dbURL
 
 default_app = firebase_admin.initialize_app(cred_obj, {
 	'databaseURL':databaseURL
