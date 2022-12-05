@@ -1,0 +1,26 @@
+{
+  "Account1":
+  {
+    "password": "abc123",
+    "books":{
+      "Book1":{
+        "title": "",
+        "author":"",
+        "publishedDate":"",
+        "status":"Reading"
+      },
+      "Book2":{
+        "title": "",
+        "author":"",
+        "publishedDate":"",
+        "status":"Read"
+      },
+      "Book3":{
+        "title": "",
+        "author":"",
+        "publishedDate":"",
+        "status":"To Read"
+      }
+    }
+  }
+}
