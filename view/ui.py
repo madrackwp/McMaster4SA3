@@ -1,47 +1,41 @@
 import sys
 sys.path.append('C:/Users/madra/OneDrive - Nanyang Technological University/McMasters/Software Arch/McMaster4SA3/model')
+sys.path.append('C:/Users/madra/OneDrive - Nanyang Technological University/McMasters/Software Arch/McMaster4SA3/controller')
 import database as db
-
+import openLibraryAPI as openLib
+import Book as Book
 # for p in sys.path:
 #     print(p)
-print("Establishing connection to Firebase")
+# print("Establishing connection to Firebase")
 connection = db.DatabaseConnection()
 ref = connection.connect()
-print("Connection established!")
+# print("Connection established!")
 data = ref.get()
 # print(data)
 
+BOOK_STATUS = {
+    1: "toRead",
+    2: "reading",
+    3: "read"
+}
 
-
-class Book():
-    def __init__(self, title, author, publishedDate, status):
-        self._title = title
-        self._author = author
-        self._publishedDate = publishedDate
-        self._status = status
-
-    def __str__(self):
-        toReturn = f"==========================\nBook Title: {self._title}\nAuthor: {self._author}\nWritten in: {self._publishedDate}\n=========================="
-        # print("==========================")
-        # print(f"Book Title: {self._title}\n")
-        # print(f"Author: {self._author}\n")
-        # print(f"Written in: {self._publishedDate}")
-        # print("==========================")
-        return toReturn
-
-    def getBookTitle(self):
-        return self._title
-
-    def getBookAuthor(self):
-        return self._author
+def prepBookLibraryToDictionary(bookLibrary):
+    print(bookLibrary)
+    data = {'books':{},"password": 'password'}
+    for bookStatus in bookLibrary:
+        for book in bookLibrary[bookStatus]:
+            print(book.getBookTitle())
+            print(book.getBookAuthor())
+            print(book.getPublishedDate())
+            print(book.getBookStatus())
+            data['books'][book.getBookTitle()] = {
+                "author":book.getBookAuthor(),
+                "publishedDate": book.getPublishedDate(),
+                "status": book.getBookStatus()
+                }
+    print(data)
+    return data
     
-    def getPublishedDate(self):
-        return self._publishedDate
-
-    def getBookStatus(self):
-        return self._status
-
-
 
 def parseInfomation(userData):
     bookLibrary = {}
@@ -55,7 +49,7 @@ def parseInfomation(userData):
         author = bookData[book]["author"]
         status = bookData[book]["status"]
         publishedDate = bookData[book]["publishedDate"]
-        newBook = Book(bookTitle, author, publishedDate, status)
+        newBook = Book.Book(bookTitle, author, publishedDate, status)
         if status == "read":
             bookLibrary['read'].append(newBook)
         elif status == "toRead":
@@ -63,13 +57,13 @@ def parseInfomation(userData):
         else:
             bookLibrary['reading'].append(newBook)
 
-        print("=============================")
-        print(book)
-        print(bookData[book]["author"])
-        print(bookData[book]["publishedDate"])
-        print(bookData[book]["status"])
-        print("=============================")
-    print(bookLibrary)
+        # print("=============================")
+        # print(book)
+        # print(bookData[book]["author"])
+        # print(bookData[book]["publishedDate"])
+        # print(bookData[book]["status"])
+        # print("=============================")
+    # print(bookLibrary)
     print("DEBUG: SUCCESSFULLY PARSED INFO")
     return bookLibrary
 
@@ -100,6 +94,7 @@ while True:
 
 
     userData = userRef.get()
+    print(userData)
     print("===============================================")
     print(f"WELCOME {userName}")
     # print(userRef)
@@ -117,15 +112,55 @@ while True:
         choice = input("What would you like to do? (Input 1-5)")
 
         if choice == "1":
+            api = openLib.OpenLibAPI()
+            type = input("Enter your query type: ")
+            query = input("Enter your search query:")
+
+            queryString = api.queryBuilder(type, query)
+            response = api.sendQuery(queryString)
+            booksFromAPI = api.parseResponse(response)
+            for book in booksFromAPI:
+                print(book)
             
-            pass
+            while True:
+                print("1. Add book to lists")
+                print("2. Exit")
+                nextInput = input("What would you like to do next?:")
+                if nextInput == "1":
+                    
+                    input3 = input("Select which book to add: (1-5)")
+                    print("1. To Read\n2. Reading\n3. Read")
+                    input4 = int(input("Which list would you like to move it to?:"))
+                    bookToAdd = booksFromAPI[int(input3)-1]
+                    # print(BOOK_STATUS[input4])
+                    bookToAdd.changeBookStatus(BOOK_STATUS[input4])
+                    bookLibrary[BOOK_STATUS[input4]].append(bookToAdd)
+                    # print(bookLibrary)
+                    userData = prepBookLibraryToDictionary(bookLibrary)
+                    connection.updateData(userRef, userData)
+
+                else:
+                    break
+
+
+
+
         elif choice == "2":
+            print("================")
+            print("To Read Books")
+            print("================")
             for book in bookLibrary['toRead']:
                 print(book)
         elif choice == "3":
+            print("================")
+            print("Currently Reading Books")
+            print("================")
             for book in bookLibrary['reading']:
                 print(book)
         elif choice == "4":
+            print("================")
+            print("Read Books")
+            print("================")
             for book in bookLibrary['read']:
                 print(book)
         elif choice == "5":
