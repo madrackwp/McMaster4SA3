@@ -22,32 +22,49 @@ class DatabaseConnection():
             'databaseURL':databaseURL
             })
         self.ref = db.reference("/")
+        # cred = credentials.Certificate('/path/to/serviceAccountKey.json')
+        # firebase_admin.initialize_app(cred)
+
         return self.ref
 
     def login(self, username):
+        print("DEBUG: ATTEMPING LOGIN")
         userRef = self.ref.child(username)
         data = userRef.get()
         if data is not None:
-            return data
+            print("DEBUG: LOGIN SUCCESS")
+            return userRef
         else: 
-            return False
+            print("DEBUG: LOGIN FAILED")
+            return None
+            
         
 
-    def createAccount(self, newUsername, newPassword):
+    def createAccount(self, newUsername, newPassword = "password"):
+        print("DEBUG: ATTEMPTING TO CREATE ACCOUNT")
         data = self.ref.get()
         newAccount = {
             "books":{},
             "password": newPassword
         }
-        data[newUsername] = newAccount
-        self.ref.set(data)
-        return self.ref.child(newUsername)
+        if self.login(newUsername) is None:
+            data[newUsername] = newAccount
+            self.ref.set(data)
+            print("DEBUG: ACCOUNT CREATED!")
+            return self.ref.child(newUsername)
+        else:
+            print("DEBUG: ACCOUNT CREATION FAILED!")
+            return None
         
+    def updateData(self, userRef, data):
+        print("DEBUG: UPDATING DATA!")
+        userRef.set(data)
+        return True
 
-dbConnection = DatabaseConnection()
-ref = dbConnection.connect()
-print(ref.get())
-dbConnection.createAccount("Wei Pin", "password123")
+# dbConnection = DatabaseConnection()
+# ref = dbConnection.connect()
+# print(ref.get())
+# dbConnection.createAccount("Wei Pin", "password123")
         
         
 

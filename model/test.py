@@ -15,23 +15,20 @@ testData = {
   {
     "password": "abc123",
     "books":{
-      "Book1":{
-        "title": "",
-        "author":"",
-        "publishedDate":"",
-        "status":"Reading"
+      "Legend of Po":{
+        "author":"Ping Pong",
+        "publishedDate":"20221010",
+        "status":"reading"
       },
-      "Book2":{
-        "title": "",
-        "author":"",
-        "publishedDate":"",
-        "status":"Read"
+      "Tales Of Chang":{
+        "author":"Ching Chong",
+        "publishedDate":"20221111",
+        "status":"read"
       },
-      "Book3":{
-        "title": "",
-        "author":"",
-        "publishedDate":"",
-        "status":"To Read"
+      "The Story of Kale":{
+        "author":"King Kong",
+        "publishedDate":"19991023",
+        "status":"toRead"
       }
     }
   }
