@@ -60,7 +60,7 @@ class DatabaseConnection():
 
     def updateData(self, userRef, data):
         print("DEBUG: UPDATING DATA!")
-        print(data)
+        # print(data)
         userRef.set(data)
 
         return True

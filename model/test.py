@@ -16,18 +16,18 @@ testData = {
     "password": "abc123",
     "books":{
       "Legend of Po":{
-        "author":"Ping Pong",
-        "publishedDate":"20221010",
+        "author":"Tom",
+        "publishedDate":"2010",
         "status":"reading"
       },
       "Tales Of Chang":{
-        "author":"Ching Chong",
-        "publishedDate":"20221111",
+        "author":"Dick",
+        "publishedDate":"2013",
         "status":"read"
       },
       "The Story of Kale":{
-        "author":"King Kong",
-        "publishedDate":"19991023",
+        "author":"Harry",
+        "publishedDate":"1990",
         "status":"toRead"
       }
     }
