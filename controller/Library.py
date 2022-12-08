@@ -17,10 +17,10 @@ class Library():
         data = {'books':{},"password": 'password'}
         for bookStatus in self.bookLibrary:
             for book in self.bookLibrary[bookStatus]:
-                print(book.getBookTitle())
-                print(book.getBookAuthor())
-                print(book.getPublishedDate())
-                print(book.getBookStatus())
+                # print(book.getBookTitle())
+                # print(book.getBookAuthor())
+                # print(book.getPublishedDate())
+                # print(book.getBookStatus())
                 data['books'][book.getBookTitle()] = {
                     "author":book.getBookAuthor(),
                     "publishedDate": book.getPublishedDate(),
@@ -30,10 +30,6 @@ class Library():
         
 
     def rawDataToLibrary(self, userData):
-        # bookLibrary = {}
-        # bookLibrary['reading'] = []
-        # bookLibrary['read'] = []
-        # bookLibrary['toRead'] = []
         bookData = userData.get("books")
         if bookData is not None:
 
@@ -51,15 +47,6 @@ class Library():
                     self.bookLibrary['toRead'].append(newBook)
                 else:
                     self.bookLibrary['reading'].append(newBook)
-
-            # print("=============================")
-            # print(book)
-            # print(bookData[book]["author"])
-            # print(bookData[book]["publishedDate"])
-            # print(bookData[book]["status"])
-            # print("=============================")
-        # print(bookLibrary)
-        # print("DEBUG: SUCCESSFULLY PARSED INFO")
         return self.bookLibrary
     
     def moveBookToDiffList(self, moveFrom, moveTo, bookIndex):

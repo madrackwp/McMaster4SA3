@@ -2,17 +2,18 @@ import sys
 import os
 sys.path.append('C:/Users/madra/OneDrive - Nanyang Technological University/McMasters/Software Arch/McMaster4SA3/model')
 sys.path.append('C:/Users/madra/OneDrive - Nanyang Technological University/McMasters/Software Arch/McMaster4SA3/controller')
-import database as db
-import openLibraryAPI as openLib
+sys.path.append('C:/Users/madra/OneDrive - Nanyang Technological University/McMasters/Software Arch/McMaster4SA3/view')
+
+import DatabaseConnection as db
+import OpenLibraryAPI as openLib
 import Book as Book
 import Library as Library
-import menus as menus
-# for p in sys.path:
-#     print(p)
-# print("Establishing connection to Firebase")
+import Menus as menus
+import QueryFactory as QueryFactory
+
+
 connection = db.DatabaseConnection()
 ref = connection.connect()
-# print("Connection established!")
 data = ref.get()
 lib = Library.Library()
 
@@ -44,19 +45,33 @@ while True:
     print("===============================================")
     print(f"WELCOME {userName}")
     bookLibrary = lib.rawDataToLibrary(userData)
-    # print(data)
     while True:
         menus.printMainMenu()   
         choice = input("WHAT WOULD YOU LIKE TO DO? (INPUT 1-5)")
         if choice == "1":
             api = openLib.OpenLibAPI()
-            type = input("ENTER YOUR QUERY TYPE: ")
-            query = input("ENTER YOUR SEARCH QUERY:")
+            type, query = menus.queryMenu()
 
-            queryString = api.queryBuilder(type, query)
+            if type == "query":
+                generalQueryFactory = QueryFactory.generalQueryFactory()
+                generalQueryFactory.generateQuery(query)
+                queryString = generalQueryFactory.getQuery()
+            elif type == "title":
+                titleQueryFactory = QueryFactory.titleQueryFactory()
+                titleQueryFactory.generateQuery(query)
+                queryString = titleQueryFactory.getQuery()
+            else:
+                authorQueryFactory = QueryFactory.authorQueryFactory()
+                authorQueryFactory.generateQuery(query)
+                queryString = authorQueryFactory.getQuery()
+
+            # print(queryString)
+            # queryString = api.queryBuilder(type, query)
             response = api.sendQuery(queryString)
+            os.system("cls")
             booksFromAPI = api.parseResponse(response)
-            for book in booksFromAPI:
+            for index,book in enumerate(booksFromAPI):
+                print(f"VIEWING BOOK #{index + 1}")
                 print(book)
             
             while True:
@@ -101,7 +116,7 @@ while True:
                 for book in bookLibrary['toRead']:
                     print(book)
                 bookToDel = menus.bookDeleteMenu()
-                lib.deleteBookFromList(list = BOOK_STATUS[1], bookIndex = bookToDel)
+                lib.deleteBookFromList(list = BOOK_STATUS[1], bookIndex = bookToDel - 1)
                 userData = lib.prepBookLibraryToDictionary()
                 connection.updateData(userRef, userData)
 
@@ -127,7 +142,7 @@ while True:
                 for book in bookLibrary['reading']:
                     print(book)
                 bookToDel = menus.bookDeleteMenu()
-                lib.deleteBookFromList(list = BOOK_STATUS[2], bookIndex = bookToDel)
+                lib.deleteBookFromList(list = BOOK_STATUS[2], bookIndex = bookToDel - 1)
                 userData = lib.prepBookLibraryToDictionary()
                 connection.updateData(userRef, userData)
             
@@ -149,7 +164,7 @@ while True:
                 for book in bookLibrary['read']:
                     print(book)
                 bookToDel = menus.bookDeleteMenu()
-                lib.deleteBookFromList(list = BOOK_STATUS[3], bookIndex = bookToDel)
+                lib.deleteBookFromList(list = BOOK_STATUS[3], bookIndex = bookToDel - 1)
                 userData = lib.prepBookLibraryToDictionary()
                 connection.updateData(userRef, userData)
         elif choice == "5":
@@ -157,7 +172,7 @@ while True:
             connection.updateData(userRef, userData)
             break
         else:
-            print("Invalid input!")
+            print("INVALID INPUT!")
 
 
     break

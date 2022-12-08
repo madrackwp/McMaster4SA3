@@ -27,7 +27,8 @@ def printCurrentlyReadingList():
 def printLoginMenu():
     os.system('cls')
     print("=============================")
-    print("What is your Login ID")
+    print("WELCOME TO READIEBOOKS")
+    print("WHAT IS YOUR LOGIN ID")
     print("=============================")
 
 def printCreateIDMenu():
@@ -39,34 +40,49 @@ def printCreateIDMenu():
 def printMainMenu():
     os.system('cls')
     print("===============================================")
-    print("1. Search for books")
-    print("2. Look at my 'To Read' list")
-    print("3. Look at my 'Currently Reading' List")
-    print("4. Look at my 'Read' list")
-    print("5. Quit")
+    print("1. SEARCH FOR BOOKS")
+    print("2. LOOK AT MY 'TO READ' LIST")
+    print("3. LOOK AT MY 'CURRENTLY READING' LIST")
+    print("4. LOOK AT MY 'READ' LIST")
+    print("5. QUIT")
     print("===============================================")
 
 def bookListMenu():
     # os.system('cls')
-    print("1. Move books")
-    print("2. Delete book")
-    print("3. Back to Main Menu")
-    userInput = input("What would you like to do now?")
+    print("1. MOVE BOOKS")
+    print("2. DELETE BOOK")
+    print("3. BACK TO MAIN MENU")
+    userInput = input("WHAT WOULD YOU LIKE TO DO NOW?")
     
     while userInput != "1" and userInput != "2" and userInput != "3":
-        print("Invalid input!")
-        userInput = input("What would you like to do now?")
+        print("INVALID INPUT!")
+        userInput = input("WHAT WOULD YOU LIKE TO DO NOW?")
     return userInput
 
 
 def bookListMovementMenu(currentList):
-    print("Which List would you like to move it to?")
+    print("WHICH LIST WOULD YOU LIKE TO MOVE IT TO?")
     for key, value in BOOK_STATUS.items():
         print(f"{key}: {value}")
     choice = input()
     return int(choice)
 
 def bookDeleteMenu():
-    choice = input("Which book would you like to delete?")
+    choice = input("WHICH BOOK WOULD YOU LIKE TO DELETE?")
     return int(choice)
+
+def queryMenu():
+    print("SEARCH BY: \n1. QUERY\n2. TITLE\n3. AUTHOR")
+    rawQueryType = input("WHAT WOULD YOU LIKE TO SEARCH BY?(ENTER 1-3): ")
+    while rawQueryType != "1" and rawQueryType != "2" and rawQueryType != "3":
+        print("INVALID INPUT")
+        rawQueryType = input("WHAT WOULD YOU LIKE TO SEARCH BY?(ENTER 1-3): ")
+    query = input("ENTER YOUR SEARCH: ")
+    if rawQueryType == "1":
+        queryType = "query"
+    elif rawQueryType == "2":
+        queryType = "title"
+    else:
+        queryType = "author"
+    return queryType, query
     
